@@ -1,28 +1,43 @@
 const Product = require("../models/product");
 const Cart = require("../models/cart");
 
-exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, productData]) => {
-      res.render("./shop/product-list", {
-        prods: rows,
-        pageTitle: "All Products",
-        path: "/products",
-      });
-    })
+const fetchAllProducts = (cb) => {
+  Product.findAll()
+    .then(cb)
     .catch((err) => {
       console.log(err);
     });
 };
 
+exports.getProducts = (req, res, next) => {
+  fetchAllProducts((products) => {
+    res.render("./shop/product-list", {
+      prods: products,
+      pageTitle: "All Products",
+      path: "/products",
+    });
+  });
+};
+
 exports.getProduct = (req, res, next) => {
   const productId = req.params.productId;
-  Product.fetchById(productId)
-    .then(([product]) => {
+  // Product.findAll({ where: { id: productId } })
+  //   .then((products) => {
+  //     res.render("./shop/product-detail", {
+  //       pageTitle: `Product ${products.at(0).id}`,
+  //       path: `/products`,
+  //       product: products.at(0),
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+  Product.findByPk(productId)
+    .then((product) => {
       res.render("./shop/product-detail", {
-        pageTitle: `Product ${productId}`,
+        pageTitle: product.title,
         path: `/products`,
-        product: product.at(0),
+        product,
       });
     })
     .catch((err) => {
@@ -31,17 +46,13 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows, productData]) => {
-      res.render("./shop/index", {
-        prods: rows,
-        pageTitle: "Shop",
-        path: "/",
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+  fetchAllProducts((products) => {
+    res.render("./shop/index", {
+      prods: products,
+      pageTitle: "Shop",
+      path: "/",
     });
+  });
 };
 
 exports.getCart = (req, res, next) => {
