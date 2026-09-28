@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Environment variables (passwords, secrets)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Coverage and cache
+coverage/
+.cache/
+.eslintcache
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/

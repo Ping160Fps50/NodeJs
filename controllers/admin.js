@@ -5,17 +5,20 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editable: false,
-    // formsCSS: true,
-    // productCSS: true,
-    // activeAddProduct: true,
   });
 };
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, description, price } = req.body;
   const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect("/");
+  product
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
