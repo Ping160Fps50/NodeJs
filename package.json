@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "body-parser": "^1.18.3",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^2.0.3",
     "csurf": "^1.11.0",
+    "dotenv": "^18.0.5",
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
@@ -26,7 +26,10 @@
     "express-validator": "^7.3.2",
     "mongodb": "^3.1.6",
     "mongoose": "^5.2.17",
+    "multer": "^2.4.0",
     "mysql2": "^1.6.1",
+    "nodemailer": "^10.0.13",
+    "pdfkit": "^0.20.2",
     "pug": "^2.0.3",
     "sequelize": "^5.0.0-beta.11"
   }

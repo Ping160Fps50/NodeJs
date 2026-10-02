@@ -23,18 +23,12 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.getSignup = (req, res, next) => {
-  let errorMessage = req.flash("error");
-  if (errorMessage.length > 0) {
-    errorMessage = message.at(0);
-  } else {
-    errorMessage = null;
-  }
   res.render("./auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
-    errorMessage,
+    errorMessage: null,
     oldInput: { email: "", password: "" },
-    validationErrors: errors.array(),
+    validationErrors: [],
   });
 };
 
@@ -85,7 +79,11 @@ exports.postLogin = (req, res, next) => {
           res.redirect("/login");
         });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
+    });
 };
 
 exports.postSignup = (req, res, next) => {
@@ -113,6 +111,11 @@ exports.postSignup = (req, res, next) => {
     })
     .then((result) => {
       res.redirect("/login");
+    })
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
     });
 };
 
@@ -158,7 +161,9 @@ exports.postReset = (req, res, next) => {
         res.redirect("/");
       })
       .catch((err) => {
-        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        next(error);
       });
   });
 };
@@ -178,10 +183,13 @@ exports.getNewPassword = (req, res, next) => {
         path: "/new-password",
         userId: user._id.toString(),
         passwordToken: token,
+        errorMessage,
       });
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
     });
 };
 
@@ -207,6 +215,8 @@ exports.postNewPassword = (req, res, next) => {
       res.redirect("/login");
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      next(error);
     });
 };
