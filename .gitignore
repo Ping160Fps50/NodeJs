@@ -1,7 +1,7 @@
 # Dependencies
 node_modules/
 
-# Environment variables (passwords, secrets)
+# Environment variables (passwords, connection strings, secrets)
 .env
 .env.*
 !.env.example
@@ -24,6 +24,9 @@ out/
 coverage/
 .cache/
 .eslintcache
+
+# Session store files (if using file-based sessions)
+sessions/
 
 # OS files
 .DS_Store
