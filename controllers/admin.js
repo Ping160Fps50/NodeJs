@@ -4,6 +4,8 @@ const { deleteFile } = require("../util/file");
 
 const Product = require("../models/product");
 
+const ITEMS_PER_PAGE = 2;
+
 exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
@@ -140,7 +142,15 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
+  const page = +req.query.page || 1;
+  let totalItems;
   Product.find({ userId: req.user._id })
+    .countDocuments().then((numOfProducts) => {
+      totalItems = numOfProducts;
+      return Product.find({ userId: req.user._id })
+        .skip((page - 1) * ITEMS_PER_PAGE)
+        .limit(ITEMS_PER_PAGE);
+    })
     // .select('title price -_id')
     // .populate('userId', 'name')
     .then((products) => {
@@ -149,6 +159,12 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: "Admin Products",
         path: "/admin/products",
+        currentPage: page,
+        nextPage: page + 1,
+        hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+        prevPage: page - 1,
+        hasPrevPage: page > 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((err) => {
